@@ -1,0 +1,36 @@
+.container {
+    width: 100%;
+    height: 100%;
+    background-image: url(../../public/images/alpha-pattern.png);
+    background-size: 402px 332px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.textContainer {
+    width: 95%;
+    height: 600px;
+}
+.header {
+    color: #efefef;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+*, :after, :before {
+    box-sizing: border-box;
+}
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: Maison,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,sans-serif;
+    background: radial-gradient(#342c3e 30%, darken(#342c3e, 10%) 100%);
+    >div, >div>div {
+        width: 100%;
+        height: 100%;
+    }
+}
+

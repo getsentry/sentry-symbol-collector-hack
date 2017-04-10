@@ -16,8 +16,8 @@ export default function editor(state = initialState, action) {
         .post('http://localhost:8181/api/crashreport')
         .send({ crashreport: action.code })
         .set('Accept', 'application/json')
-        .end(function(err, res){
-          // console.log(res);
+        .end(function(err, res) {
+          if (err) return; // TODO show nice error message
           action.asyncDispatch({ type: SYMBOLICATED_CRASHREPORT, response: res })
         });
       return { ...state };

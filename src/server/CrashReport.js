@@ -20,6 +20,9 @@ export default class CrashReport {
 
   symbolicateReport() {
     return new Promise((resolve, reject) => {
+      if (this.arch === undefined) {
+        reject('wrong crashreport format');
+      }
       const symbolsToRequest = [];
       this.frames.forEach((frame, symbol) => {
         const image = this._findBinaryImage(frame.image);
@@ -29,7 +32,7 @@ export default class CrashReport {
               object_uuid: image.uuid,
               addr: `0x${(symbol - image.startAddress).toString(16)}`
             },
-            frame: frame
+            frame
           });
         }
       });
@@ -49,11 +52,11 @@ export default class CrashReport {
             this.symbolicatedCrashReport = this.crashReport;
             symbolsToRequest.forEach((symbolToRequest) => {
               // console.log(res.body.symbols[count]);
-              let responseSymbol = res.body.symbols[count];
+              const responseSymbol = res.body.symbols[count];
               // console.log(symbolToRequest.frame.symbol);
               // console.log('/'+symbolToRequest.frame.symbol + '\\s(.+)$/');
-              let regex = new RegExp(symbolToRequest.frame.symbol + '\\s(.+)$', 'mg');
-              let subt = `${symbolToRequest.frame.symbol} ${responseSymbol.symbol} + ${parseInt(responseSymbol.addr, 16)}`;
+              const regex = new RegExp(`${symbolToRequest.frame.symbol}\\s(.+)$`, 'mg');
+              const subt = `${symbolToRequest.frame.symbol} ${responseSymbol.symbol} + ${parseInt(responseSymbol.addr, 16)}`;
               this.symbolicatedCrashReport = this.symbolicatedCrashReport.replace(regex, subt);
               count++;
             });

@@ -28,6 +28,8 @@ api.post('/crashreport', (req, res) => {
   crashReport.parseReport();
   crashReport.symbolicateReport().then((symbolicatedReport) => {
     res.send(symbolicatedReport);
+  }).catch((reason) => {
+    res.status(400).send(reason);
   });
 });
 

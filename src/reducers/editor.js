@@ -1,4 +1,4 @@
-import { UPDATE_CODE } from 'constants/action-types';
+import { UPDATE_CODE, SYMBOLICATED_CRASHREPORT } from 'constants/action-types';
 import request from 'superagent';
 
 const code = '// Paste your Apple crash report here\n' +
@@ -17,8 +17,13 @@ export default function editor(state = initialState, action) {
         .send({ crashreport: action.code })
         .set('Accept', 'application/json')
         .end(function(err, res){
-          console.log(res);
+          // console.log(res);
+          action.asyncDispatch({ type: SYMBOLICATED_CRASHREPORT, response: res })
         });
+      return { ...state };
+    case SYMBOLICATED_CRASHREPORT:
+      // console.log(action.response.text);
+      state.code = action.response.text;
       return { ...state };
     default:
       return state;

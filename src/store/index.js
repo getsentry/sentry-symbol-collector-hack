@@ -12,10 +12,36 @@ import * as reducers from 'reducers';
 export const history = createBrowserHistory();
 const reducer = combineReducers({ ...reducers });
 
+const asyncDispatchMiddleware = store => next => action => {
+  let syncActivityFinished = false;
+  let actionQueue = [];
+
+  function flushQueue() {
+    actionQueue.forEach(a => store.dispatch(a)); // flush queue
+    actionQueue = [];
+  }
+
+  function asyncDispatch(asyncAction) {
+    actionQueue = actionQueue.concat([asyncAction]);
+
+    if (syncActivityFinished) {
+      flushQueue();
+    }
+  }
+
+  const actionWithAsyncDispatch =
+    Object.assign({}, action, { asyncDispatch });
+
+  next(actionWithAsyncDispatch);
+  syncActivityFinished = true;
+  flushQueue();
+};
+
 const store = compose(
   // Enables your middleware:
   // applyMiddleware(thunk), // any Redux middleware, e.g. redux-thunk
   applyMiddleware(routerMiddleware(history)),
+  applyMiddleware(asyncDispatchMiddleware),
   // Provides support for DevTools via Chrome extension
   window.devToolsExtension ? window.devToolsExtension() : f => f
 )(createStore)(connectRouter(history)(reducer));

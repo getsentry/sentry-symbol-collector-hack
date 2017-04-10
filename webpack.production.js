@@ -36,12 +36,13 @@ module.exports = {
     compressionPlugin
   ],
   resolve: {
-    modules: ['node_modules', path.join(__dirname, 'src')]
+    modules: ['node_modules', path.join(__dirname, 'src')],
+    extensions: ['.js', '.jsx']
   },
   module: {
     loaders: [
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
       },
@@ -49,7 +50,10 @@ module.exports = {
       { test: /\.scss$/, loader: `${stylesheetsLoader}'!sass-loader` },
       { test: /\.sass$/, loader: `${stylesheetsLoader}'!sass?indentedSyntax=sass` },
       { test: /\.less$/, loader: `${stylesheetsLoader}'!less` },
-      { test: /\.html$/, loader: 'html-loader' }
+      { test: /\.html$/, loader: 'html-loader' },
+      { test: /\.(png|jpg)$/,
+        include: path.join(__dirname, 'public/images'),
+        loader: 'file-loader' }
     ]
   }
 };

@@ -18,12 +18,13 @@ module.exports = {
   devtool: 'source-map',
   plugins: [htmlWebpackPlugin, definePlugin],
   resolve: {
-    modules: ['node_modules', path.join(__dirname, 'src')]
+    modules: ['node_modules', path.join(__dirname, 'src')],
+    extensions: ['.js', '.jsx']
   },
   module: {
     loaders: [
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
       },

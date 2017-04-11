@@ -4,10 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 
-const stylesheetsLoader = ExtractTextPlugin.extract({
-  fallbackLoader: 'style-loader',
-  loader: 'css-loader?modules&localIdentName=[hash:base64]'
-});
+const stylesheetsLoader =
+  'style-loader!css-loader?modules&localIdentName=[path]-[local]-[hash:base64:3]';
 const stylesheetsPlugin = new ExtractTextPlugin('[hash].css');
 const htmlWebpackPlugin = new HtmlWebpackPlugin({ template: 'index.html' });
 const definePlugin = new webpack.DefinePlugin({

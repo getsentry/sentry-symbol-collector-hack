@@ -25,7 +25,67 @@ textarea {
   font-size: 14px;
   width: 100%;
   height: 100%;
+  border: 0;
+  min-height: 400px;
+}
+
+:global {
+
+.flip-container {
   box-shadow: 0 2px 0 rgba(22,17,28,.1);
   border: 1px solid #dbd3e9;
-  min-height: 400px;
+  background: white;
+}
+
+.flip-container.hover .front {
+  opacity: 0;
+  visibility: hidden;
+}
+.flip-container.hover .back {
+  opacity: 1;
+  visibility: visible;
+}
+
+.flip-container, .front, .back {
+  width: 100%;
+  height: 100%;
+}
+
+.flipper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.front, .back {
+  transition: all 0.6s ease-in-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.front {
+  opacity: 1;
+  z-index: 1;
+  visibility: visible;
+}
+
+.back {
+  opacity: 0;
+  z-index: 2;
+  visibility: hidden;
+  .hint {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    background: rgba(22,17,28,.1);
+    padding: 5px;
+  }
+  textarea {
+    background: lighten(black, 98%);
+  }
+}
+
 }

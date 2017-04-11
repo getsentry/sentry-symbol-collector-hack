@@ -60,6 +60,7 @@
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-0": "^6.22.0",
     "body-parser": "^1.17.1",
+    "classnames": "^2.2.5",
     "compression-webpack-plugin": "^0.3.2",
     "connected-react-router": "4.0.0-beta.4",
     "cors": "^2.8.3",

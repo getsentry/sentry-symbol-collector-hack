@@ -1,4 +1,4 @@
-import { CRASHREPORT_CHANGED, CRASHREPORT_UPLOAD, CRASHREPORT_CONVERT_ERROR, SYMBOLICATED_CRASHREPORT } from 'constants/action-types';
+import { CRASHREPORT_CHANGED, CRASHREPORT_UPLOAD, CRASHREPORT_CONVERT_ERROR, CRASHREPORT_RESET, SYMBOLICATED_CRASHREPORT } from 'constants/action-types';
 import request from 'superagent';
 
 const crashReport = '// Paste your Apple crash report here\n';
@@ -53,6 +53,8 @@ export default function editor(state = initialState, action) {
       return Object.assign({}, state, {
         crashReportSymbolicated: ''
       });
+    case CRASHREPORT_RESET:
+      return initialState;
     case SYMBOLICATED_CRASHREPORT:
       return Object.assign({}, state, {
         crashReportSymbolicated: action.response.body.symbolicated

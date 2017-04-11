@@ -1,4 +1,4 @@
-import { CRASHREPORT_CHANGED, CRASHREPORT_UPLOAD, CRASHREPORT_CONVERT_ERROR } from 'constants/action-types';
+import { CRASHREPORT_CHANGED, CRASHREPORT_UPLOAD, CRASHREPORT_CONVERT_ERROR, CRASHREPORT_RESET } from 'constants/action-types';
 
 export function changeCrashReport(crashReport) {
   return {
@@ -20,5 +20,10 @@ export function handleConvertError(error) {
   };
 }
 
+export function resetCrashReport() {
+ return {
+    type: CRASHREPORT_RESET
+  };
+}
 
-export default { changeCrashReport, uploadCrashReport, handleConvertError };
+export default { changeCrashReport, uploadCrashReport, handleConvertError, resetCrashReport };

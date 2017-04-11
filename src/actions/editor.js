@@ -1,9 +1,9 @@
-import { CRASHREPORT_CHANGED, CRASHREPORT_UPLOAD } from 'constants/action-types';
+import { CRASHREPORT_CHANGED, CRASHREPORT_UPLOAD, CRASHREPORT_CONVERT_ERROR } from 'constants/action-types';
 
-export function changeCrashReport(code) {
+export function changeCrashReport(crashReport) {
   return {
     type: CRASHREPORT_CHANGED,
-    code
+    crashReport
   };
 }
 
@@ -14,4 +14,11 @@ export function uploadCrashReport(files) {
   };
 }
 
-export default { changeCrashReport, uploadCrashReport };
+export function handleConvertError(error) {
+ return {
+    type: CRASHREPORT_CONVERT_ERROR
+  };
+}
+
+
+export default { changeCrashReport, uploadCrashReport, handleConvertError };

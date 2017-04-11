@@ -36,8 +36,8 @@ api.post('/crashreport/upload', upload.single('crashreport'), (req, res) => {
 function symbolicateCrashReport(crashReportText, req, res) {
   const crashReport = new CrashReport(crashReportText);
   crashReport.parseReport();
-  crashReport.symbolicateReport().then((symbolicatedReport) => {
-    res.send(symbolicatedReport);
+  crashReport.symbolicateReport().then((result) => {
+    res.send({raw: result[0], symbolicated: result[1]});
   }).catch((reason) => {
     res.status(400).send(reason);
   });

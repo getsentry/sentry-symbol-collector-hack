@@ -6,7 +6,8 @@ import Dropzone from 'react-dropzone';
 
 type Props = {
   dispatch: () => void,
-  code: string
+  crashReport: string,
+  crashReportSymbolicated: string,
 }
 
 export class Editor extends Component {
@@ -21,14 +22,13 @@ export class Editor extends Component {
   }
 
   render() {
-    const options = {
-      lineNumbers: true,
-    };
-
     return (
-      <div className={styles.textContainer}>
+      <div className={styles.editor}>
         <Dropzone onDrop={this.onDrop.bind(this)} multiple={false} />
-        <textarea value={this.props.code} onChange={this.changeCrashReport.bind(this)} />
+        <div className={styles.textContainer}>
+          <textarea value={this.props.crashReport} onChange={this.changeCrashReport.bind(this)} />
+          <textarea value={this.props.crashReportSymbolicated} readOnly={true} />
+        </div>
       </div>
     );
   }
@@ -36,7 +36,8 @@ export class Editor extends Component {
 
 function mapStateToProperties(state) {
   return {
-    code: state.editor.code
+    crashReport: state.editor.crashReport,
+    crashReportSymbolicated: state.editor.crashReportSymbolicated,
   };
 }
 

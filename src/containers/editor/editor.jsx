@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateCode } from 'actions/editor';
+import { changeCrashReport, uploadCrashReport } from 'actions/editor';
 import styles from './editor.scss';
-import CodeMirror from 'react-codemirror';
+import Dropzone from 'react-dropzone';
 
 type Props = {
   dispatch: () => void,
@@ -12,8 +12,12 @@ type Props = {
 export class Editor extends Component {
   props: Props;
 
-  updateCode(code) {
-    this.props.dispatch(updateCode(code));
+  changeCrashReport(event) {
+    this.props.dispatch(changeCrashReport(event.target.value));
+  }
+
+  onDrop(files) {
+    this.props.dispatch(uploadCrashReport(files));
   }
 
   render() {
@@ -23,9 +27,8 @@ export class Editor extends Component {
 
     return (
       <div className={styles.textContainer}>
-        <CodeMirror
-          value={this.props.code} onChange={this.updateCode.bind(this)} options={options}
-        />
+        <Dropzone onDrop={this.onDrop.bind(this)} multiple={false} />
+        <textarea value={this.props.code} onChange={this.changeCrashReport.bind(this)} />
       </div>
     );
   }

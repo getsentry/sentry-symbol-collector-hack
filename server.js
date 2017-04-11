@@ -2,6 +2,8 @@ const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const multer = require('multer');
+const upload = multer()
 
 const app = express();
 const api = express();
@@ -24,14 +26,22 @@ app.all('*', (req, res, next) => {
 });
 
 api.post('/crashreport', (req, res) => {
-  const crashReport = new CrashReport(req.body.crashreport);
+  symbolicateCrashReport(req.body.crashreport, req, res);
+});
+
+api.post('/crashreport/upload', upload.single('crashreport'), (req, res) => {
+   symbolicateCrashReport(req.file.buffer + '', req, res);
+});
+
+function symbolicateCrashReport(crashReportText, req, res) {
+  const crashReport = new CrashReport(crashReportText);
   crashReport.parseReport();
   crashReport.symbolicateReport().then((symbolicatedReport) => {
     res.send(symbolicatedReport);
   }).catch((reason) => {
     res.status(400).send(reason);
   });
-});
+}
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(dist, 'index.html'));

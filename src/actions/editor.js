@@ -1,10 +1,17 @@
-import { UPDATE_CODE } from 'constants/action-types';
+import { CRASHREPORT_CHANGED, CRASHREPORT_UPLOAD } from 'constants/action-types';
 
-export function updateCode(code) {
+export function changeCrashReport(code) {
   return {
-    type: UPDATE_CODE,
+    type: CRASHREPORT_CHANGED,
     code
   };
 }
 
-export default { updateCode };
+export function uploadCrashReport(files) {
+ return {
+    type: CRASHREPORT_UPLOAD,
+    files
+  };
+}
+
+export default { changeCrashReport, uploadCrashReport };

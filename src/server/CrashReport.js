@@ -53,10 +53,11 @@ export default class CrashReport {
             symbolsToRequest.forEach((symbolToRequest) => {
               // console.log(res.body.symbols[count]);
               const responseSymbol = res.body.symbols[count];
+              // console.log(symbolToRequest.frame);
               // console.log(symbolToRequest.frame.symbol);
               // console.log('/'+symbolToRequest.frame.symbol + '\\s(.+)$/');
               const regex = new RegExp(`${symbolToRequest.frame.symbol}\\s(.+)$`, 'mg');
-              const subt = `${symbolToRequest.frame.symbol} ${responseSymbol.symbol} + ${parseInt(responseSymbol.addr, 16)}`;
+              const subt = `${symbolToRequest.frame.symbol} ${responseSymbol.symbol} + ${symbolToRequest.request.addr - responseSymbol.addr}`;
               this.symbolicatedCrashReport = this.symbolicatedCrashReport.replace(regex, subt);
               count++;
             });

@@ -25,7 +25,7 @@ export class Uploader extends Component {
             onDrop={this.onDrop.bind(this)}
             multiple={false}>
             <div className={styles.droper} />
-            <h3>Drop your crashreport here</h3>
+            <h3>Drop your apple crashreport here</h3>
         </Dropzone>
       </div>
     );

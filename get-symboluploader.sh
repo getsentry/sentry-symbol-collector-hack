@@ -7,7 +7,7 @@ echo "This script will automatically convert all you system symbols and send the
 echo "Thanks for helping us out, here is a 🍪"
 if [ "x$(id -u)" == "x0" ]; then
   echo "Warning: this script is currently running as root. This is dangerous. "
-  echo "         Instead run it as normal user. We will sudo as needed."
+  echo "         Instead run it as normal user."
 fi
 
 if ! hash curl 2> /dev/null; then
@@ -22,8 +22,13 @@ cleanup() {
 }
 
 trap cleanup EXIT
+echo
+echo "➡️  Downloading..."
 curl -SL --progress-bar "$DOWNLOAD_URL" > "$TEMP_FILE"
-chmod 0755 "$TEMP_FILE"
-bash "$TEMP_FILE" --version
+chmod +x "$TEMP_FILE"
+echo
+echo "⚙️  Converting SDKs and sharing them with sentry.io"
+"$TEMP_FILE" convert-sdk --default-location --share-to http://192.168.1.101:8181/api/sdk
 
-echo 'Done!'
+echo
+echo '🌟 Done!'

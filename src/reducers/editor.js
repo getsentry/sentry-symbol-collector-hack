@@ -1,7 +1,7 @@
 import { CRASHREPORT_CHANGED, CRASHREPORT_UPLOAD, CRASHREPORT_CONVERT_ERROR, CRASHREPORT_RESET, SYMBOLICATED_CRASHREPORT } from 'constants/action-types';
 import request from 'superagent';
 
-const crashReport = '// or paste it here';
+const crashReport = '// or paste it';
 
 const initialState = {
   crashReport,
@@ -18,7 +18,7 @@ function symbolicateCrashReport(action) {
         action.asyncDispatch({ type: CRASHREPORT_CONVERT_ERROR, error: err });
         return;
       }
-      action.asyncDispatch({ type: SYMBOLICATED_CRASHREPORT, response: res })
+      action.asyncDispatch({ type: SYMBOLICATED_CRASHREPORT, response: res });
     });
 }
 
@@ -34,7 +34,7 @@ function uploadCrashReport(action) {
         }
         // TODO show nice error message
         console.log(res);
-        action.asyncDispatch({ type: SYMBOLICATED_CRASHREPORT, response: res })
+        action.asyncDispatch({ type: SYMBOLICATED_CRASHREPORT, response: res });
       });
   });
 }
@@ -48,7 +48,7 @@ export default function editor(state = initialState, action) {
       });
     case CRASHREPORT_UPLOAD:
       uploadCrashReport(action);
-      return {...state};
+      return { ...state };
     case CRASHREPORT_CONVERT_ERROR:
       return Object.assign({}, state, {
         crashReportSymbolicated: ''

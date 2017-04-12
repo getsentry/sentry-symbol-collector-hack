@@ -13,6 +13,25 @@ body, html {
         height: 100%;
     }
 }
+pre {
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    word-break: break-all;
+    word-wrap: break-word;
+    color: #333;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+}
+p, h3 {
+    text-align: center;
+}
 .footer {
     border-top: 1px solid #342c3e;
     background-color: #16111c;
@@ -33,6 +52,6 @@ body, html {
     flex: 0 1 auto;
 }
 .growRow {
-    flex: 1 1 auto;
+    flex: 1 0 300px;
     display: flex;
 }

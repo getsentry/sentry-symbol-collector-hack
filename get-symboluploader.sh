@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 
-DOWNLOAD_URL="https://github.com/getsentry/symbolserver/releases/download/1.8.1/sentry-symbolserver-Linux-x86_64"
+DOWNLOAD_URL="https://github.com/getsentry/symbolserver/releases/download/1.9.0/sentry-symbolserver-Darwin-x86_64"
 
 echo "This script will automatically convert all you system symbols and send them to sentry."
 echo "Thanks for helping us out, here is a 🍪"

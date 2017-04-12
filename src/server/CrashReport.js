@@ -62,7 +62,7 @@ export default class CrashReport {
               count++;
             });
             // console.log(this.symbolicatedCrashReport);
-            resolve([this.crashReport, this.symbolicatedCrashReport]);
+            resolve(this);
           }
         });
     });

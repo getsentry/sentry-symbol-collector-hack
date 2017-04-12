@@ -3,7 +3,12 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const upload = multer()
+const crypto = require('crypto');
+const fs = require('fs');
+// const upload = multer()
+const uploadFolder = 'uploads/';
+const upload = multer({ dest: uploadFolder });
+
 
 const app = express();
 const api = express();
@@ -12,6 +17,13 @@ const port = process.env.PORT ? process.env.PORT : 8181;
 const dist = path.join(__dirname, 'dist');
 
 const CrashReport = require('./src/server/CrashReport').default;
+
+function checksum(str, algorithm, encoding) {
+  return crypto
+        .createHash(algorithm || 'md5')
+        .update(str, 'utf8')
+        .digest(encoding || 'hex');
+}
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.static(dist));
@@ -30,14 +42,26 @@ api.post('/crashreport', (req, res) => {
 });
 
 api.post('/crashreport/upload', upload.single('crashreport'), (req, res) => {
-   symbolicateCrashReport(req.file.buffer + '', req, res);
+  symbolicateCrashReport(`${req.file.buffer}`, req, res);
+});
+
+api.post('/sdk', upload.single('file'), (req, res) => {
+  fs.readFile(req.file.path, (err, data) => {
+    const cs = checksum(data, 'sha1');
+    fs.rename(req.file.path, uploadFolder + req.file.originalname + '-' + cs, () => {
+      res.send('ok');
+    });
+  });
 });
 
 function symbolicateCrashReport(crashReportText, req, res) {
   const crashReport = new CrashReport(crashReportText);
   crashReport.parseReport();
-  crashReport.symbolicateReport().then((result) => {
-    res.send({raw: result[0], symbolicated: result[1]});
+  crashReport.symbolicateReport().then((crashReport) => {
+    res.send({
+      raw: crashReport.crashReport,
+      symbolicated: crashReport.symbolicatedCrashReport
+    });
   }).catch((reason) => {
     res.status(400).send(reason);
   });

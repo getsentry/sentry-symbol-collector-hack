@@ -6,3 +6,5 @@ dist
 
 # Ignore logs
 npm-debug.log
+
+uploads

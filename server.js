@@ -8,6 +8,7 @@ const fs = require('fs');
 // const upload = multer()
 const uploadFolder = 'uploads/';
 const upload = multer({ dest: uploadFolder });
+const stream = multer();
 
 
 const app = express();
@@ -41,7 +42,7 @@ api.post('/crashreport', (req, res) => {
   symbolicateCrashReport(req.body.crashreport, req, res);
 });
 
-api.post('/crashreport/upload', upload.single('crashreport'), (req, res) => {
+api.post('/crashreport/upload', stream.single('crashreport'), (req, res) => {
   symbolicateCrashReport(`${req.file.buffer}`, req, res);
 });
 

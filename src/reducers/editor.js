@@ -1,7 +1,7 @@
 import { CRASHREPORT_CHANGED, CRASHREPORT_UPLOAD, CRASHREPORT_CONVERT_ERROR, CRASHREPORT_RESET, SYMBOLICATED_CRASHREPORT } from 'constants/action-types';
 import request from 'superagent';
 
-const crashReport = '// or paste it';
+const crashReport = '// Drag or paste your apple crash report here';
 
 const initialState = {
   crashReport,

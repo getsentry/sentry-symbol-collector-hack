@@ -20,11 +20,10 @@ export class Uploader extends Component {
     return (
       <Dropzone
           className={styles.dropzone}
-          activeClassName={styles.active}
           onDrop={this.onDrop.bind(this)}
-          multiple={false}>
-          <div className={styles.droper} />
-          <h3>Drop your apple crashreport here</h3>
+          multiple={false}
+          disableClick={true}>
+          {this.props.children}
       </Dropzone>
     );
   }

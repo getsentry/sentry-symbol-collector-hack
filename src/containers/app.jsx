@@ -31,8 +31,9 @@ export class AppContainer extends Component {
           <h2>paste our upload your apple crash report</h2>
         </Hero>
         <Section hazy={true} className={`${styles['inset-top-shadow']} ${styles.growRow} ${styles.vContainer}`}>
-          <Uploader />
-          <Editor />
+          <Uploader>
+            <Editor />
+          </Uploader>
         </Section>
         <Section className={styles.row}>
           <h3>Want to help us providing even better stacktraces?</h3>

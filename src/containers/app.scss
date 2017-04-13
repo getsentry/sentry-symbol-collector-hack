@@ -43,10 +43,17 @@ p, h3 {
         bottom: 10px;
     }
 }
-.container {
+.vContainer {
     display: flex;
     flex-flow: column;
     height: 100%;
+}
+.hContainer {
+    display: flex;
+    flex-flow: row;
+}
+.inset-top-shadow {
+    box-shadow: inset 0 10px 10px -10px rgba(0,0,0,0.8);
 }
 .row {
     flex: 0 1 auto;

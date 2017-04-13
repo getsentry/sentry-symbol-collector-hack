@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import styles from './hero.scss';
+import classnames from 'classnames';
 
 export default class Hero extends Component {
 
   render() {
+    const classNames = classnames(
+        styles.gradient,
+        this.props.className
+    );
     return (
-      <div className={styles.gradient}>
+      <div className={classNames}>
         <div className={styles.pattern}>
             <svg
               aria-hidden="true"

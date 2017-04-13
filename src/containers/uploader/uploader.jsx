@@ -18,16 +18,14 @@ export class Uploader extends Component {
 
   render() {
     return (
-      <div>
-        <Dropzone
-            className={styles.dropzone}
-            activeClassName={styles.active}
-            onDrop={this.onDrop.bind(this)}
-            multiple={false}>
-            <div className={styles.droper} />
-            <h3>Drop your apple crashreport here</h3>
-        </Dropzone>
-      </div>
+      <Dropzone
+          className={styles.dropzone}
+          activeClassName={styles.active}
+          onDrop={this.onDrop.bind(this)}
+          multiple={false}>
+          <div className={styles.droper} />
+          <h3>Drop your apple crashreport here</h3>
+      </Dropzone>
     );
   }
 

@@ -13,6 +13,9 @@ body, html {
         height: 100%;
     }
 }
+i {
+    font-size: 10px;
+}
 pre {
     display: block;
     padding: 9.5px;
@@ -28,6 +31,7 @@ pre {
     width: 80%;
     margin: 0 auto;
     text-align: center;
+    white-space: initial;
 }
 p, h3 {
     text-align: center;

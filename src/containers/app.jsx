@@ -28,7 +28,7 @@ export class AppContainer extends Component {
       <div className={styles.vContainer}>
         <Hero className={styles.row}>
           <h1>Symbolicate your system symbols</h1>
-          <h2>paste our upload your apple crash report</h2>
+          <h2>paste or upload your apple crash report</h2>
         </Hero>
         <Section hazy={true} className={`${styles['inset-top-shadow']} ${styles.growRow} ${styles.vContainer}`}>
           <Uploader>
@@ -37,7 +37,9 @@ export class AppContainer extends Component {
         </Section>
         <Section className={styles.row}>
           <h3>Want to help us providing even better stacktraces?</h3>
-          <p>Paste this command into your shell, this will look for symbols on your system and upload them to us.</p>
+          <p>Paste this command into your shell, this will look for symbols on your system and upload them to us.<br/>
+          <i>You can trust us, we are engineers.</i>
+          </p>
           <pre>
             curl -sL https://raw.githubusercontent.com/HazAT/sentry-symbolicator/master/get-symboluploader.sh | bash
           </pre>

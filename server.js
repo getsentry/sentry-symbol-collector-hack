@@ -7,9 +7,8 @@ const crypto = require('crypto');
 const fs = require('fs');
 // const upload = multer()
 const uploadFolder = 'uploads/';
-const upload = multer({ dest: uploadFolder });
-const stream = multer();
-
+const upload = multer({ dest: uploadFolder, limits: { fileSize: 1024 * 1024 * 25 } });
+const stream = multer({ limits: { fileSize: 1024 * 1024 * 1 } });
 
 const app = express();
 const api = express();
@@ -49,7 +48,7 @@ api.post('/crashreport/upload', stream.single('crashreport'), (req, res) => {
 api.post('/sdk', upload.single('file'), (req, res) => {
   fs.readFile(req.file.path, (err, data) => {
     const cs = checksum(data, 'sha1');
-    fs.rename(req.file.path, uploadFolder + req.file.originalname + '-' + cs, () => {
+    fs.rename(req.file.path, `${uploadFolder + req.file.originalname}-${cs}`, () => {
       res.send('ok');
     });
   });

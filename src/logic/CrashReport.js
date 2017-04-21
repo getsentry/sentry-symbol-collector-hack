@@ -7,7 +7,8 @@ const REGEX_FRAME = /^[0-9]+\s+([^\s]+)\s+(0x[0-9a-f]+)\s+(0x[0-9a-f]+)/mg;
 
 export default class CrashReport {
 
-  constructor(crashReport) {
+  constructor(baseUrl, crashReport) {
+    this.baseUrl = baseUrl;
     this.crashReport = crashReport;
   }
 
@@ -16,6 +17,10 @@ export default class CrashReport {
     this.os = this._parseOS();
     this.binaryImages = this._parseBinaryImages();
     this.frames = this._parseFrames();
+  }
+
+  isValidReport() {
+    return this.arch && this.os && this.binaryImages && this.frames;
   }
 
   symbolicateReport() {
@@ -43,31 +48,26 @@ export default class CrashReport {
       };
 
       request
-        .post('http://127.0.0.1:3000/lookup')
+        .post(this.baseUrl)
         .send(symbolicateRequest)
         .set('Accept', 'application/json')
         .end((err, res) => {
-          if (res.body && res.body.symbols) {
+          if (res && res.body && res.body.symbols) {
             let count = 0;
             this.symbolicatedCrashReport = this.crashReport;
             symbolsToRequest.forEach((symbolToRequest) => {
-              // console.log(res.body.symbols[count]);
               const responseSymbol = res.body.symbols[count];
-              // console.log(symbolToRequest.frame);
-              // console.log(symbolToRequest.frame.symbol);
-              // console.log('/'+symbolToRequest.frame.symbol + '\\s(.+)$/');
               const regex = new RegExp(`${symbolToRequest.frame.symbol}\\s(.+)$`, 'mg');
               const subt = `${symbolToRequest.frame.symbol} ${responseSymbol.symbol} + ${symbolToRequest.request.addr - responseSymbol.addr}`;
               this.symbolicatedCrashReport = this.symbolicatedCrashReport.replace(regex, subt);
               count++;
             });
-            // console.log(this.symbolicatedCrashReport);
             resolve(this);
+          } else {
+            reject(err);
           }
         });
     });
-        // console.log(symbolicateRequest);
-        // console.log(this._findBinaryImage('libsystem_kernel.dylib'));
   }
 
   _findBinaryImage(name) {

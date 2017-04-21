@@ -8,20 +8,20 @@ export function changeCrashReport(crashReport) {
 }
 
 export function uploadCrashReport(files) {
- return {
+  return {
     type: CRASHREPORT_UPLOAD,
     files
   };
 }
 
-export function handleConvertError(error) {
- return {
+export function handleConvertError() {
+  return {
     type: CRASHREPORT_CONVERT_ERROR
   };
 }
 
 export function resetCrashReport() {
- return {
+  return {
     type: CRASHREPORT_RESET
   };
 }

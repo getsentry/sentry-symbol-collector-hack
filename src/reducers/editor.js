@@ -1,39 +1,43 @@
 import { CRASHREPORT_CHANGED, CRASHREPORT_UPLOAD, CRASHREPORT_CONVERT_ERROR, CRASHREPORT_RESET, SYMBOLICATED_CRASHREPORT } from 'constants/action-types';
 import request from 'superagent';
+import CrashReport from '../logic/CrashReport';
 
 const crashReport = '// Drag or paste your apple crash report here';
 
 const initialState = {
   crashReport,
-  crashReportSymbolicated: ''
+  crashReportSymbolicated: '',
+  error: ''
 };
 
 function symbolicateCrashReport(action) {
-  request
-    .post('http://localhost:8181/api/crashreport')
-    .send({ crashreport: action.crashReport })
-    .set('Accept', 'application/json')
-    .end((err, res) => {
-      if (err) {
-        action.asyncDispatch({ type: CRASHREPORT_CONVERT_ERROR, error: err });
-        return;
-      }
-      action.asyncDispatch({ type: SYMBOLICATED_CRASHREPORT, response: res });
-    });
+  const crashReport = new CrashReport(__SYMBOLSERVER_URL__, action.crashReport);
+  crashReport.parseReport();
+  if (crashReport.isValidReport()) {
+    request
+      .post(`${__SERVER_BASE_URL__}/api/crashreport`)
+      .send({ crashreport: action.crashReport })
+      .set('Accept', 'application/json')
+      .end((err, res) => {
+        if (err) {
+          action.asyncDispatch({ type: CRASHREPORT_CONVERT_ERROR, error: err });
+          return;
+        }
+        action.asyncDispatch({ type: SYMBOLICATED_CRASHREPORT, response: res });
+      });
+  }
 }
 
 function uploadCrashReport(action) {
   action.files.forEach((file) => {
     request
-      .post('http://localhost:8181/api/crashreport/upload')
+      .post(`${__SERVER_BASE_URL__}/api/crashreport/upload`)
       .attach('crashreport', file)
       .end((err, res) => {
         if (err) {
           action.asyncDispatch({ type: CRASHREPORT_CONVERT_ERROR, error: err });
           return;
         }
-        // TODO show nice error message
-        console.log(res);
         action.asyncDispatch({ type: SYMBOLICATED_CRASHREPORT, response: res });
       });
   });
@@ -44,20 +48,23 @@ export default function editor(state = initialState, action) {
     case CRASHREPORT_CHANGED:
       symbolicateCrashReport(action);
       return Object.assign({}, state, {
-        crashReport: action.crashReport
+        crashReport: action.crashReport,
+        error: ''
       });
     case CRASHREPORT_UPLOAD:
       uploadCrashReport(action);
       return { ...state };
     case CRASHREPORT_CONVERT_ERROR:
       return Object.assign({}, state, {
-        crashReportSymbolicated: ''
+        crashReportSymbolicated: '',
+        error: action.error.message
       });
     case CRASHREPORT_RESET:
       return initialState;
     case SYMBOLICATED_CRASHREPORT:
       return Object.assign({}, state, {
-        crashReportSymbolicated: action.response.body.symbolicated
+        crashReportSymbolicated: action.response.body.symbolicated,
+        error: ''
       });
     default:
       return state;

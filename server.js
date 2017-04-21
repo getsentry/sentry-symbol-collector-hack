@@ -14,9 +14,10 @@ const app = express();
 const api = express();
 
 const port = process.env.PORT ? process.env.PORT : 8181;
+const __SYMBOLSERVER_URL__ = process.env.SYMBOLSERVER_URL ? process.env.SYMBOLSERVER_URL : 'http://127.0.0.1:3000/lookup';
 const dist = path.join(__dirname, 'dist');
 
-const CrashReport = require('./src/server/CrashReport').default;
+const CrashReport = require('./src/logic/CrashReport').default;
 
 function checksum(str, algorithm, encoding) {
   return crypto
@@ -55,7 +56,7 @@ api.post('/sdk', upload.single('file'), (req, res) => {
 });
 
 function symbolicateCrashReport(crashReportText, req, res) {
-  const crashReport = new CrashReport(crashReportText);
+  const crashReport = new CrashReport(__SYMBOLSERVER_URL__, crashReportText);
   crashReport.parseReport();
   crashReport.symbolicateReport().then((crashReport) => {
     res.send({
@@ -75,5 +76,5 @@ app.listen(port, (error) => {
   if (error) {
     console.log(error); // eslint-disable-line no-console
   }
-  console.info('Express is listening on port %s.', port); // eslint-disable-line no-console
+  console.info('Express is listening on port %s. SymbolServer: %s', port, __SYMBOLSERVER_URL__); // eslint-disable-line no-console
 });

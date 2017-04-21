@@ -6,7 +6,9 @@ const stylesheetsLoader =
   'style-loader!css-loader?modules&localIdentName=[path]-[local]-[hash:base64:3]';
 const htmlWebpackPlugin = new HtmlWebpackPlugin({ template: 'index.html' });
 const definePlugin = new webpack.DefinePlugin({
-  __DEV__: JSON.stringify(JSON.parse(process.env.NODE_ENV === 'development' || 'true'))
+  __DEV__: JSON.stringify(JSON.parse(process.env.NODE_ENV === 'development' || 'true')),
+  __SYMBOLSERVER_URL__ : "'http://127.0.0.1:3000/lookup'",
+  __SERVER_BASE_URL__ : "'http://localhost:8181'",
 });
 
 module.exports = {

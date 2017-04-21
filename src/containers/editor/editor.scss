@@ -14,7 +14,18 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
 
+.error {
+  color: #504140;
+  padding: 10px 60px;
+  margin: 0;
+  margin-bottom: 15px;
+  background: #fffcfb;
+  border: 1px solid #E7C0BC;
+  text-align: center;
+  font-size: 14px;
+  font-weight: normal;
 }
 
 textarea {

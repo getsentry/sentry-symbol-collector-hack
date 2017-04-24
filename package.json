@@ -86,6 +86,7 @@
     "react-redux": "^5.0.3",
     "react-router": "^4.0.0-alpha.3",
     "redux": "^3.6.0",
+    "s3": "^4.4.0",
     "sass-loader": "^6.0.3",
     "style-loader": "^0.13.2",
     "superagent": "^3.5.2",

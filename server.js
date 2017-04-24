@@ -6,18 +6,21 @@ const multer = require('multer');
 const crypto = require('crypto');
 const fs = require('fs');
 const s3 = require('s3');
-
-// ---------------------------- Config
-
-const uploadFolder = 'uploads/';
-const maxFileSize = 1024 * 1024 * 30;
-const upload = multer({ dest: uploadFolder, limits: { fileSize: maxFileSize } });
-const stream = multer({ limits: { fileSize: 1024 * 1024 * 1 } });
+const ejs = require('ejs');
 
 const app = express();
 const api = express();
 
-const port = process.env.PORT ? process.env.PORT : 8181;
+// ---------------------------- Config
+
+const uploadFolder = 'uploads/';
+const FILE_LIMIT_IN_MB = process.env.FILE_LIMIT_IN_MB ? process.env.FILE_LIMIT_IN_MB : 30;
+const maxFileSize = 1024 * 1024 * FILE_LIMIT_IN_MB;
+const upload = multer({ dest: uploadFolder, limits: { fileSize: maxFileSize } });
+const stream = multer({ limits: { fileSize: 1024 * 1024 * 1 } });
+
+const URL = process.env.URL ? process.env.URL : 'http://127.0.0.1:8181';
+const PORT = process.env.PORT ? process.env.PORT : 8181;
 const SYMBOLSERVER_URL = process.env.SYMBOLSERVER_URL ? process.env.SYMBOLSERVER_URL : 'http://127.0.0.1:3000/lookup';
 const dist = path.join(__dirname, 'dist');
 
@@ -130,15 +133,24 @@ api.post('/sdk', upload.single('file'), (req, res) => {
   });
 });
 
+app.get('/upload.sh', (req, res) => {
+  ejs.renderFile('./get-symboluploader.sh', {
+    server_url: URL
+  }, {}, (err, str) => {
+    res.setHeader('Content-Type', 'text/plain');
+    res.end(str);
+  });
+});
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(dist, 'index.html'));
 });
 
-app.listen(port, (error) => {
+app.listen(PORT, (error) => {
   if (error) {
     console.log(error); // eslint-disable-line no-console
   }
-  console.info('Express is listening on port %s. SymbolServer: %s', port, SYMBOLSERVER_URL); // eslint-disable-line no-console
+  console.info('Express is listening on port %s with URL: . SymbolServer: %s', PORT, URL, SYMBOLSERVER_URL); // eslint-disable-line no-console
 });
 
 // ----------------------------

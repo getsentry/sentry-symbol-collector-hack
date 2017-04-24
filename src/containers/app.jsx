@@ -41,7 +41,7 @@ export class AppContainer extends Component {
           <i>You can trust us, we are engineers.</i>
           </p>
           <pre>
-            curl -sL https://raw.githubusercontent.com/HazAT/sentry-symbolicator/master/get-symboluploader.sh | bash
+            curl -sL {window.location.href}upload.sh | bash
           </pre>
           <p>We also have something for your efforts, here is a 🍩</p>
         </Section>

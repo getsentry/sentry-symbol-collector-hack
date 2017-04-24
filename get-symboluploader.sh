@@ -52,7 +52,7 @@ curl -SL --progress-bar "$DOWNLOAD_URL" > "$TEMP_FILE"
 chmod +x "$TEMP_FILE"
 echo
 echo "⚙️  Converting SDKs and sharing them with sentry.io"
-"$TEMP_FILE" convert-sdk --default-location --share-to http://192.168.1.101:8181/api/sdk
+"$TEMP_FILE" convert-sdk --default-location --share-to <%= server_url %>/api/sdk
 
 echo
 echo '🌟 Done!'

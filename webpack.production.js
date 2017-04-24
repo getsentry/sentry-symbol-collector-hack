@@ -13,7 +13,6 @@ const definePlugin = new webpack.DefinePlugin({
   'process.env': {
     NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'production')
   },
-  __SYMBOLSERVER_URL__ : "'http://127.0.0.1:3000/lookup'",
 });
 const uglifyPlugin = new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } });
 const compressionPlugin = new CompressionPlugin();

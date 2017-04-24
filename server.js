@@ -38,6 +38,10 @@ app.all('*', (req, res, next) => {
   next();
 });
 
+api.get('/health', (req, res) => {
+  res.send('ok');
+});
+
 api.post('/crashreport', (req, res) => {
   symbolicateCrashReport(req.body.crashreport, req, res);
 });

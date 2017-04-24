@@ -11,11 +11,11 @@ const initialState = {
 };
 
 function symbolicateCrashReport(action) {
-  const crashReport = new CrashReport(__SYMBOLSERVER_URL__, action.crashReport);
+  const crashReport = new CrashReport(null, action.crashReport);
   crashReport.parseReport();
   if (crashReport.isValidReport()) {
     request
-      .post(`${__SERVER_BASE_URL__}/api/crashreport`)
+      .post('/api/crashreport')
       .send({ crashreport: action.crashReport })
       .set('Accept', 'application/json')
       .end((err, res) => {
@@ -31,7 +31,7 @@ function symbolicateCrashReport(action) {
 function uploadCrashReport(action) {
   action.files.forEach((file) => {
     request
-      .post(`${__SERVER_BASE_URL__}/api/crashreport/upload`)
+      .post('/api/crashreport/upload')
       .attach('crashreport', file)
       .end((err, res) => {
         if (err) {

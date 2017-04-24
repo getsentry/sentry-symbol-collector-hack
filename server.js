@@ -150,7 +150,7 @@ app.listen(PORT, (error) => {
   if (error) {
     console.log(error); // eslint-disable-line no-console
   }
-  console.info('Express is listening on port %s with URL: . SymbolServer: %s', PORT, URL, SYMBOLSERVER_URL); // eslint-disable-line no-console
+  console.info('Express is listening on port %s with URL: %s.\nSymbolServer: %s', PORT, URL, SYMBOLSERVER_URL); // eslint-disable-line no-console
 });
 
 // ----------------------------

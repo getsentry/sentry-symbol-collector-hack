@@ -72,7 +72,7 @@ export default class CrashReport {
 
   _findBinaryImage(name) {
     function findBinaryImage(image) {
-      return image.name == name;
+      return image.name === name;
     }
     return this.binaryImages.find(findBinaryImage);
   }

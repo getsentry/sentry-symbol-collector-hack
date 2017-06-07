@@ -1,7 +1,7 @@
 {
   "name": "app",
   "version": "1.0.0",
-  "description": "",
+  "description": "Public symbol collection service sentry",
   "scripts": {
     "start": "webpack-dev-server --hot",
     "server": "babel-watch server",
@@ -31,8 +31,8 @@
       "^.+\\.(css)$": "identity-obj-proxy"
     }
   },
-  "author": "We're in <wereinhq.com>",
-  "license": "ISC",
+  "author": "Sentry",
+  "license": "MIT",
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "babel-jest": "^19.0.0",

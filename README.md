@@ -1,8 +1,9 @@
-# React
+# Dev Setup
 
 ```
 yarn install
 npm start
+npm run server
 ```
 
 # Running with Docker
@@ -12,9 +13,12 @@ npm start
 - S3_SECRET_ACCESS_KEY = s3 secret key
 - S3_BUCKET = getsentry-dsym-contribs
 
-# http://192.168.100.166:3000/lookup = Running instance of rust symbol server
+*http://192.168.100.166:3000/lookup = Running instance of rust symbol server*
+
+```
 docker build -t sentry/symboling
 docker run -p 49160:8181 -e SYMBOLSERVER_URL='http://192.168.100.166:3000/lookup' sentry/symboling
+```
 
 ## License
 MIT

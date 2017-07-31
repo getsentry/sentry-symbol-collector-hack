@@ -8,7 +8,7 @@ npm run server
 
 # Running with Docker
 ## Env vars
-- URL = url of the running service e.g.: symbols.sentry.io
+- URL = url of the running service e.g.: https://symbols.sentry.io
 - S3_ACCESS_KEY_ID = s3 access key
 - S3_SECRET_ACCESS_KEY = s3 secret key
 - S3_BUCKET = getsentry-dsym-contribs

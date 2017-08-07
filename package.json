@@ -55,6 +55,7 @@
     "webpack-dev-server": "2.4.1"
   },
   "dependencies": {
+    "@google-cloud/storage": "^1.2.1",
     "babel": "^6.23.0",
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.1",

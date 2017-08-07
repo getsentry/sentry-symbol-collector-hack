@@ -25,4 +25,5 @@ RUN yarn install
 
 EXPOSE 8181
 
+ENTRYPOINT ["/usr/src/app/gcloud.sh"]
 CMD [ "tini", "--", "npm", "run", "production" ]

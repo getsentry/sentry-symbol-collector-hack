@@ -120,6 +120,10 @@ api.post('/sdk', upload.single('file'), (req, res) => {
   });
 });
 
+api.post('/test', upload.single('file'), (req, res) => {
+  res.send(require('util').inspect(req));
+});
+
 app.get('/upload.sh', (req, res) => {
   ejs.renderFile('./get-symboluploader.sh', {
     server_url: URL

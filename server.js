@@ -21,7 +21,33 @@ const api = express();
 const uploadFolder = 'uploads/';
 const FILE_LIMIT_IN_MB = process.env.FILE_LIMIT_IN_MB ? process.env.FILE_LIMIT_IN_MB : 30;
 const maxFileSize = 1024 * 1024 * FILE_LIMIT_IN_MB;
-const upload = multer({ dest: uploadFolder, limits: { fileSize: maxFileSize } });
+
+let upload;
+let bucket;
+if (process.env.GCLOUD_BUCKET === undefined) {
+  upload = multer({ dest: uploadFolder, limits: { fileSize: maxFileSize } });
+} else {
+  bucket = gcs.bucket(process.env.GCLOUD_BUCKET);
+  upload = multer({
+    limits: { fileSize: maxFileSize },
+    storage: {
+      _handleFile: (req, incomingFile, next) => {
+        const file = bucket.file(incomingFile.originalname);
+        incomingFile.stream
+          .pipe(file.createWriteStream({
+            metadata: {
+              contentType: incomingFile.mimetype
+            }
+          }))
+          .on('error', next)
+          .on('finish', next);
+      },
+      _removeFile: (req, incomingFile, next) => {
+        next();
+      }
+    }
+  });
+}
 const stream = multer({ limits: { fileSize: 1024 * 1024 * 1 } });
 
 const URL = process.env.URL ? process.env.URL : 'http://127.0.0.1:8181';
@@ -55,7 +81,6 @@ function uploadToGcloud(filename) {
     console.error('GCloud Storage is not configured, will not upload anything'); // eslint-disable-line no-console
     return;
   }
-  const bucket = gcs.bucket(process.env.GCLOUD_BUCKET);
   bucket.upload(filename, (err, file) => {
     if (err) {
       console.error('unable to upload file to gcloud:', err.stack); // eslint-disable-line no-console
@@ -120,8 +145,8 @@ api.post('/sdk', upload.single('file'), (req, res) => {
   });
 });
 
-api.post('/test', stream.single('file'), (req, res) => {
-  res.send(require('util').inspect(req));
+api.post('/test', upload.single('file'), (req, res) => {
+  res.send('ok');
 });
 
 app.get('/upload.sh', (req, res) => {

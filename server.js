@@ -3,8 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const crypto = require('crypto');
-const fs = require('fs');
 
 const gcs = require('@google-cloud/storage')({
   projectId: process.env.GCLOUD_PROJECT_ID || '-',
@@ -32,7 +30,7 @@ if (process.env.GCLOUD_BUCKET === undefined) {
     limits: { fileSize: maxFileSize },
     storage: {
       _handleFile: (req, incomingFile, next) => {
-        const file = bucket.file(incomingFile.originalname);
+        const file = bucket.file(`${(new Date.now())}_${incomingFile.originalname}`);
         incomingFile.stream
           .pipe(file.createWriteStream({
             metadata: {
@@ -74,40 +72,6 @@ function symbolicateCrashReport(crashReportText, req, res) {
 }
 
 // ----------------------------
-// ---------------------------- GCloud Storage
-
-function uploadToGcloud(filename) {
-  if (process.env.GCLOUD_BUCKET === undefined) {
-    console.error('GCloud Storage is not configured, will not upload anything'); // eslint-disable-line no-console
-    return;
-  }
-  bucket.upload(filename, (err, file) => {
-    if (err) {
-      console.error('unable to upload file to gcloud:', err.stack); // eslint-disable-line no-console
-      return;
-    }
-    console.log('done uploading'); // eslint-disable-line no-console
-    fs.unlink(filename, (error) => {
-      if (error) {
-        console.error('unable to delete:', error); // eslint-disable-line no-console
-      } else {
-        console.log(`deleted local file ${filename}`); // eslint-disable-line no-console
-      }
-    });
-  });
-}
-
-// ----------------------------
-// ---------------------------- Helper
-
-function checksum(str, algorithm, encoding) {
-  return crypto
-        .createHash(algorithm || 'md5')
-        .update(str, 'utf8')
-        .digest(encoding || 'hex');
-}
-
-// ----------------------------
 // ---------------------------- API
 
 app.use(cors({ origin: true, credentials: true }));
@@ -135,18 +99,7 @@ api.post('/crashreport/upload', stream.single('crashreport'), (req, res) => {
 });
 
 api.post('/sdk', upload.single('file'), (req, res) => {
-  fs.readFile(req.file.path, (err, data) => {
-    const cs = checksum(data, 'sha1');
-    const filename = `${uploadFolder + req.file.originalname}-${cs}`;
-    fs.rename(req.file.path, filename, () => {
-      res.send('ok');
-      uploadToGcloud(filename);
-    });
-  });
-});
-
-api.post('/test', upload.single('file'), (req, res) => {
-  res.send('ok');
+  res.send('received file');
 });
 
 app.get('/upload.sh', (req, res) => {

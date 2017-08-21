@@ -30,7 +30,7 @@ if (process.env.GCLOUD_BUCKET === undefined) {
     limits: { fileSize: maxFileSize },
     storage: {
       _handleFile: (req, incomingFile, next) => {
-        const file = bucket.file(`${(new Date.now())}_${incomingFile.originalname}`);
+        const file = bucket.file(`${Date.now()}_${incomingFile.originalname}`);
         incomingFile.stream
           .pipe(file.createWriteStream({
             metadata: {

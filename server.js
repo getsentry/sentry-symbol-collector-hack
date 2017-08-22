@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const crypto = require('crypto');
+const fs = require('fs');
 
 const gcs = require('@google-cloud/storage')({
   projectId: process.env.GCLOUD_PROJECT_ID || '-',
@@ -19,33 +21,7 @@ const api = express();
 const uploadFolder = 'uploads/';
 const FILE_LIMIT_IN_MB = process.env.FILE_LIMIT_IN_MB ? process.env.FILE_LIMIT_IN_MB : 30;
 const maxFileSize = 1024 * 1024 * FILE_LIMIT_IN_MB;
-
-let upload;
-let bucket;
-if (process.env.GCLOUD_BUCKET === undefined) {
-  upload = multer({ dest: uploadFolder, limits: { fileSize: maxFileSize } });
-} else {
-  bucket = gcs.bucket(process.env.GCLOUD_BUCKET);
-  upload = multer({
-    limits: { fileSize: maxFileSize },
-    storage: {
-      _handleFile: (req, incomingFile, next) => {
-        const file = bucket.file(`${Date.now()}_${incomingFile.originalname}`);
-        incomingFile.stream
-          .pipe(file.createWriteStream({
-            metadata: {
-              contentType: incomingFile.mimetype
-            }
-          }))
-          .on('error', next)
-          .on('finish', next);
-      },
-      _removeFile: (req, incomingFile, next) => {
-        next();
-      }
-    }
-  });
-}
+const upload = multer({ dest: uploadFolder, limits: { fileSize: maxFileSize } });
 const stream = multer({ limits: { fileSize: 1024 * 1024 * 1 } });
 
 const URL = process.env.URL ? process.env.URL : 'http://127.0.0.1:8181';
@@ -69,6 +45,41 @@ function symbolicateCrashReport(crashReportText, req, res) {
   }).catch((reason) => {
     res.status(400).send(reason);
   });
+}
+
+// ----------------------------
+// ---------------------------- GCloud Storage
+
+function uploadToGcloud(filename) {
+  if (process.env.GCLOUD_BUCKET === undefined) {
+    console.error('GCloud Storage is not configured, will not upload anything'); // eslint-disable-line no-console
+    return;
+  }
+  const bucket = gcs.bucket(process.env.GCLOUD_BUCKET);
+  bucket.upload(filename, (err, file) => {
+    if (err) {
+      console.error('unable to upload file to gcloud:', err.stack); // eslint-disable-line no-console
+      return;
+    }
+    console.log('done uploading'); // eslint-disable-line no-console
+    fs.unlink(filename, (error) => {
+      if (error) {
+        console.error('unable to delete:', error); // eslint-disable-line no-console
+      } else {
+        console.log(`deleted local file ${filename}`); // eslint-disable-line no-console
+      }
+    });
+  });
+}
+
+// ----------------------------
+// ---------------------------- Helper
+
+function checksum(str, algorithm, encoding) {
+  return crypto
+        .createHash(algorithm || 'md5')
+        .update(str, 'utf8')
+        .digest(encoding || 'hex');
 }
 
 // ----------------------------
@@ -99,7 +110,14 @@ api.post('/crashreport/upload', stream.single('crashreport'), (req, res) => {
 });
 
 api.post('/sdk', upload.single('file'), (req, res) => {
-  res.send('received file');
+  fs.readFile(req.file.path, (err, data) => {
+    const cs = checksum(data, 'sha1');
+    const filename = `${uploadFolder + req.file.originalname}-${cs}`;
+    fs.rename(req.file.path, filename, () => {
+      res.send('ok');
+      uploadToGcloud(filename);
+    });
+  });
 });
 
 app.get('/upload.sh', (req, res) => {

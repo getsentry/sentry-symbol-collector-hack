@@ -92,6 +92,6 @@
     "sass-loader": "^6.0.3",
     "style-loader": "^0.13.2",
     "superagent": "^3.5.2",
-    "webpack": "2.2.1"
+    "webpack": "4.0.0"
   }
 }
